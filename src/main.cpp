@@ -31,14 +31,16 @@ void repl() {
     while (true) {
         std::getline(std::cin, expr);
         // check if this a repl command
-        if (expr[0] == ':') {
-            bool cont = run_command(expr.substr(1), interp);
-            if (!cont)
-                return;
+        if (expr.size()) {
+            if (expr[0] == ':') {
+                bool cont = run_command(expr.substr(1), interp);
+                if (!cont)
+                    return;
+            }
+            // run the given text as a brainfuck expression
+            interp.run_statement(expr);
+            std::cout << std::endl;
         }
-        // run the given text as a brainfuck expression
-        interp.run_statement(expr);
-        std::cout << std::endl;
     }
 }
 
