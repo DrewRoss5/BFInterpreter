@@ -90,3 +90,21 @@ bool Interpreter::_exec_tok(Token tok) {
     }
     return true;
 }
+
+// REPL functions
+void Interpreter::clear_tape() {
+    for (int i = 0; i < TAPE_SIZE; i++)
+        _tape[i] = 0;
+}
+
+void Interpreter::print_curr() {
+    std::cout << _tape[_pos] << std::endl;
+}
+
+// prints all cells from 0 up to and including the current cell
+void Interpreter::print_tape() {
+    for (int i = 0; i <= _pos; i++) {
+        std::cout << " " << _tape[_pos] << " ";
+    }
+    std::cout << std::endl;
+}

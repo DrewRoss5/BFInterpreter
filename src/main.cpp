@@ -3,6 +3,46 @@
 
 #include "interpreter.h"
 
+bool run_command(const std::string& command, Interpreter& interp) {
+    for (char c : command) {
+        switch (c) {
+            case 'r': interp.reset_head(); break;
+            case 'p': interp.print_tape(); break;
+            case 'c': interp.clear_tape(); break;
+            case 'C': system("clear"); break;
+            case 'h': 
+                std::cout << interp.pos() << std::endl;
+                break;
+            case 'q':
+                return false;
+            default:
+                std::cout << "Error: Unrecognized command character: " << c << std::endl;
+                break;
+        }
+    }
+    return true;
+}
+
+void repl() {
+    std::string expr;
+    Interpreter interp;
+    bool success;
+    std::cout << "Welcome to the BrainFuck REPL. Enter :q to quit" << std::endl;
+    while (true) {
+        std::getline(std::cin, expr);
+        // check if this a repl command
+        if (expr[0] == ':') {
+            bool cont = run_command(expr.substr(1), interp);
+            if (!cont)
+                return;
+        }
+        // run the given text as a brainfuck expression
+        interp.run_statement(expr);
+        std::cout << std::endl;
+    }
+}
+
+
 int run_file(const std::string& filepath) {
     // ensure file opens
     std::ifstream src_file(filepath);
@@ -21,10 +61,6 @@ int run_file(const std::string& filepath) {
     }
     std::cout << std::endl;
     return 0;
-}
-
-void repl() {
-    std::cout << "Whoops! REPL environment is not yet implemented" << std::endl;
 }
 
 int main(int argc, char** argv) {

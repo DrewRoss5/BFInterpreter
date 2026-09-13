@@ -16,7 +16,7 @@ class Interpreter {
         void reset_head() {_pos = 0;}
         void print_tape();
         void clear_tape();
-        void print_cell(size_t pos);
+        void print_curr();
         // getters
         size_t pos() {return _pos;}
         std::string err_msg() {return _err_msg;}
