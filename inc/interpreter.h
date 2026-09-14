@@ -23,8 +23,10 @@ class Interpreter {
 
     private:
         bool _exec_tok(Token tok);
+        void _realloc();
         size_t _pos;    
         size_t _tok_pos;
+        size_t _curr_size;
         size_t _loopback;
         uint8_t* _tape;
         std::string _err_msg;

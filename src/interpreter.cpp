@@ -3,13 +3,12 @@
 
 #include "interpreter.h"
 
-#define TAPE_SIZE 30000
-#define MAX_POS 29999
 
 Interpreter::Interpreter() {
     // initialize tape
-    _tape = new uint8_t[TAPE_SIZE];
-    for (int i = 0; i < TAPE_SIZE; i++)
+    _tape = new uint8_t[1024];
+    _curr_size = 1024;
+    for (int i = 0; i < 1024; i++)
         _tape[i] = 0;
     // initialize other members
     _pos = 0;
@@ -18,6 +17,17 @@ Interpreter::Interpreter() {
 
 Interpreter::~Interpreter() {
     delete[] _tape;
+}
+
+void Interpreter::_realloc() {
+    size_t old_size = _curr_size;
+    _curr_size *= 2; 
+    uint8_t* new_tape = new uint8_t[_curr_size];
+    for (int i = 0; i < old_size; i++) {
+        new_tape[i] = _tape[i];
+    }
+    delete[] _tape;
+    _tape = new_tape;
 }
 
 bool Interpreter::run_statement(const std::string& statement) {
@@ -54,10 +64,8 @@ bool Interpreter::_exec_tok(Token tok) {
             _pos--; 
             break;
         case SHIFT_RIGHT:
-            if (_pos == MAX_POS) {
-                _err_msg = "Tape head out of bounds (cannot go above 29,999)";
-                return false;
-            }
+            if ((_pos + 1) == _curr_size) 
+                _realloc();
             _pos++;
             break;
         case PRINT: 
@@ -93,7 +101,7 @@ bool Interpreter::_exec_tok(Token tok) {
 
 // REPL functions
 void Interpreter::clear_tape() {
-    for (int i = 0; i < TAPE_SIZE; i++)
+    for (int i = 0; i < _curr_size; i++)
         _tape[i] = 0;
 }
 
